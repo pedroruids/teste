@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup — Converter · teste</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style type="text/tailwindcss">
+  /* Copiado de frontend/app/globals.css — docs/DESIGN.md */
+  @theme {
+    --color-brand-50: #f5f3ff;
+    --color-brand-600: #7c3aed;
+    --color-brand-700: #6d28d9;
+    --radius-card: 0.75rem;
+    --font-sans: "Geist", sans-serif;
+    --font-mono: "Geist Mono", monospace;
+  }
+  @layer base {
+    body { @apply bg-zinc-50 text-zinc-900 font-sans antialiased; }
+  }
+  @layer components {
+    .btn { @apply inline-flex items-center gap-2 h-10 px-4 rounded-card text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 disabled:opacity-50 disabled:cursor-not-allowed; }
+    .btn-primary { @apply bg-brand-600 text-white hover:bg-brand-700; }
+    .btn-secondary { @apply bg-white text-zinc-900 border border-zinc-200 hover:bg-zinc-50; }
+    .btn-ghost { @apply text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900; }
+    .btn-icon { @apply h-8 w-8 px-0 justify-center; }
+    .card { @apply bg-white border border-zinc-200 rounded-card; }
+    .badge { @apply inline-flex items-center h-6 px-2 rounded-full text-xs font-medium; }
+    .badge-ok { @apply bg-emerald-50 text-emerald-700; }
+    .badge-erro { @apply bg-red-50 text-red-700; }
+    .badge-wip { @apply bg-zinc-100 text-zinc-600; }
+    .num { @apply font-mono tabular-nums text-right; }
+    .skel { @apply bg-zinc-200 rounded animate-pulse; }
+    th { @apply text-left text-xs font-medium text-zinc-500 uppercase tracking-wide px-4 py-3; }
+    td { @apply px-4 py-3 text-sm align-middle; }
+    tbody tr { @apply border-t border-zinc-200; }
+    .estado-label { @apply sticky top-0 z-10 bg-zinc-900 text-zinc-100 text-xs font-mono px-4 py-2 border-b border-zinc-700; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ====================================================================
+     ESTADO 1 — VAZIO (primeira utilização)
+     ==================================================================== -->
+<div class="estado-label">ESTADO 1 / 4 — VAZIO · primeira utilização</div>
+<div class="min-h-screen">
+  <!-- shell: cabeçalho -->
+  <header class="bg-white border-b border-zinc-200">
+    <div class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="h-6 w-6 rounded-md bg-brand-600"></span>
+        <span class="font-semibold">teste</span>
+      </div>
+      <nav class="flex items-center gap-1 text-sm" aria-label="Principal">
+        <a href="#" aria-current="page" class="px-3 h-9 inline-flex items-center rounded-card bg-brand-50 text-brand-700 font-medium">Converter</a>
+        <a href="#" class="px-3 h-9 inline-flex items-center rounded-card text-zinc-600 hover:bg-zinc-100">Histórico</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 py-10 space-y-8">
+    <div>
+      <h1 class="text-2xl font-semibold">Converter para WebP</h1>
+      <p class="mt-1 text-sm text-zinc-500">Os WebP ficam disponíveis aqui e no Histórico.</p>
+    </div>
+
+    <!-- Dropzone (componente novo, específico deste produto) -->
+    <div role="button" tabindex="0" aria-label="Arrastar imagens JPG ou PNG, ou escolher ficheiros"
+         class="card border-2 border-dashed border-zinc-300 bg-white rounded-card p-16 flex flex-col items-center text-center gap-4 hover:border-brand-600 hover:bg-brand-50/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 cursor-pointer">
+      <span class="h-12 w-12 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M12 16V4m0 0-4 4m4-4 4 4"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+      </span>
+      <div>
+        <p class="text-base font-medium">Arrasta imagens JPG ou PNG</p>
+        <p class="mt-1 text-sm text-zinc-500">ou <span class="text-brand-700 font-medium underline underline-offset-2">escolhe ficheiros</span> · várias de uma vez · até 20 MB cada</p>
+      </div>
+    </div>
+
+    <!-- Qualidade + acção primária (desactivada sem ficheiros) -->
+    <div class="card p-6 flex flex-col sm:flex-row sm:items-end gap-6 justify-between">
+      <div class="flex-1 max-w-sm">
+        <label for="q1" class="block text-sm font-medium">Qualidade WebP</label>
+        <div class="mt-2 flex items-center gap-4">
+          <input id="q1" type="range" min="1" max="100" value="80" class="flex-1 accent-brand-600">
+          <input type="number" min="1" max="100" value="80" aria-label="Qualidade, 1 a 100" class="w-20 h-10 px-3 rounded-card border border-zinc-200 bg-white num focus:outline-2 focus:outline-brand-600">
+        </div>
+        <p class="mt-2 text-xs text-zinc-500">80 é o equilíbrio habitual para web.</p>
+      </div>
+      <button class="btn btn-primary" disabled>Converter</button>
+    </div>
+  </main>
+</div>
+
+<!-- ====================================================================
+     ESTADO 2 — A CARREGAR (lote em conversão)
+     ==================================================================== -->
+<div class="estado-label">ESTADO 2 / 4 — A CARREGAR · lote em conversão (3 de 12)</div>
+<div class="min-h-screen">
+  <header class="bg-white border-b border-zinc-200">
+    <div class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-3"><span class="h-6 w-6 rounded-md bg-brand-600"></span><span class="font-semibold">teste</span></div>
+      <nav class="flex items-center gap-1 text-sm" aria-label="Principal">
+        <a href="#" aria-current="page" class="px-3 h-9 inline-flex items-center rounded-card bg-brand-50 text-brand-700 font-medium">Converter</a>
+        <a href="#" class="px-3 h-9 inline-flex items-center rounded-card text-zinc-600 hover:bg-zinc-100">Histórico</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 py-10 space-y-8">
+    <div>
+      <h1 class="text-2xl font-semibold">Converter para WebP</h1>
+      <p class="mt-1 text-sm text-zinc-500">Os WebP ficam disponíveis aqui e no Histórico.</p>
+    </div>
+
+    <!-- Dropzone encolhida a uma barra -->
+    <div class="card border-2 border-dashed border-zinc-300 px-5 h-12 flex items-center justify-between text-sm text-zinc-500">
+      <span>12 ficheiros · 18,4 MB</span>
+      <span class="text-zinc-400">Adicionar mais fica disponível quando terminar</span>
+    </div>
+
+    <!-- Progresso do lote -->
+    <div class="card p-6 space-y-3" role="status" aria-live="polite">
+      <div class="flex items-center justify-between text-sm">
+        <span class="font-medium">A converter… <span class="num">3</span> de <span class="num">12</span></span>
+        <span class="text-zinc-500">Qualidade <span class="num">80</span></span>
+      </div>
+      <div class="h-2 rounded-full bg-zinc-200 overflow-hidden" aria-hidden="true">
+        <div class="h-full w-1/4 bg-brand-600 rounded-full"></div>
+      </div>
+    </div>
+
+    <!-- Tabela: ordem mantida, linhas por converter com skeleton -->
+    <div class="card overflow-hidden">
+      <table class="w-full">
+        <thead class="bg-zinc-50">
+          <tr><th>Ficheiro</th><th class="text-right">Antes</th><th class="text-right">Depois</th><th class="text-right">Poupança</th><th>Estado</th><th><span class="sr-only">Acções</span></th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="font-medium truncate max-w-xs">hero-homepage.jpg</div><div class="text-xs text-zinc-500">JPG</div></td>
+            <td class="num">2,1 MB</td><td class="num">640 KB</td><td class="num text-emerald-700">−70 %</td>
+            <td><span class="badge badge-ok">ok</span></td>
+            <td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar hero-homepage.webp"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 4v12m0 0 4-4m-4 4-4-4M4 20h16"/></svg></button></td>
+          </tr>
+          <tr>
+            <td><div class="font-medium truncate max-w-xs">equipa-2026.png</div><div class="text-xs text-zinc-500">PNG</div></td>
+            <td class="num">4,8 MB</td><td class="num">1,2 MB</td><td class="num text-emerald-700">−75 %</td>
+            <td><span class="badge badge-ok">ok</span></td>
+            <td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar equipa-2026.webp"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 4v12m0 0 4-4m-4 4-4-4M4 20h16"/></svg></button></td>
+          </tr>
+          <tr>
+            <td><div class="font-medium truncate max-w-xs">produto-cadeira-01.jpg</div><div class="text-xs text-zinc-500">JPG</div></td>
+            <td class="num">860 KB</td><td class="num">298 KB</td><td class="num text-emerald-700">−65 %</td>
+            <td><span class="badge badge-ok">ok</span></td>
+            <td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar produto-cadeira-01.webp"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 4v12m0 0 4-4m-4 4-4-4M4 20h16"/></svg></button></td>
+          </tr>
+          <tr>
+            <td><div class="font-medium truncate max-w-xs">produto-cadeira-02.jpg</div><div class="text-xs text-zinc-500">JPG</div></td>
+            <td class="num">912 KB</td><td><div class="skel h-4 w-16 ml-auto"></div></td><td><div class="skel h-4 w-12 ml-auto"></div></td>
+            <td><span class="badge badge-wip">a converter</span></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><div class="font-medium truncate max-w-xs">banner-promocao-verao.png</div><div class="text-xs text-zinc-500">PNG</div></td>
+            <td class="num">3,3 MB</td><td><div class="skel h-4 w-16 ml-auto"></div></td><td><div class="skel h-4 w-12 ml-auto"></div></td>
+            <td><span class="badge badge-wip">na fila</span></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><div class="font-medium truncate max-w-xs">logo-parceiro-lasa.png</div><div class="text-xs text-zinc-500">PNG</div></td>
+            <td class="num">156 KB</td><td><div class="skel h-4 w-16 ml-auto"></div></td><td><div class="skel h-4 w-12 ml-auto"></div></td>
+            <td><span class="badge badge-wip">na fila</span></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="px-4 py-3 text-xs text-zinc-500 border-t border-zinc-200">… e mais 6 ficheiros na fila</div>
+    </div>
+
+    <div class="card p-6 flex flex-col sm:flex-row sm:items-end gap-6 justify-between">
+      <div class="flex-1 max-w-sm opacity-60">
+        <label for="q2" class="block text-sm font-medium">Qualidade WebP</label>
+        <div class="mt-2 flex items-center gap-4">
+          <input id="q2" type="range" min="1" max="100" value="80" disabled class="flex-1 accent-brand-600">
+          <input type="number" value="80" disabled aria-label="Qualidade, 1 a 100" class="w-20 h-10 px-3 rounded-card border border-zinc-200 bg-zinc-50 num">
+        </div>
+      </div>
+      <button class="btn btn-primary" disabled><span class="h-4 w-4 rounded-full border-2 border-white/40 border-t-white animate-spin" aria-hidden="true"></span>A converter…</button>
+    </div>
+  </main>
+</div>
+
+<!-- ====================================================================
+     ESTADO 3 — ERRO (a: API não respondeu · b: lote com falhas parciais)
+     ==================================================================== -->
+<div class="estado-label">ESTADO 3 / 4 — ERRO · (a) envio falhou · (b) lote concluído com falhas parciais</div>
+<div class="min-h-screen">
+  <header class="bg-white border-b border-zinc-200">
+    <div class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-3"><span class="h-6 w-6 rounded-md bg-brand-600"></span><span class="font-semibold">teste</span></div>
+      <nav class="flex items-center gap-1 text-sm" aria-label="Principal">
+        <a href="#" aria-current="page" class="px-3 h-9 inline-flex items-center rounded-card bg-brand-50 text-brand-700 font-medium">Converter</a>
+        <a href="#" class="px-3 h-9 inline-flex items-center rounded-card text-zinc-600 hover:bg-zinc-100">Histórico</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 py-10 space-y-12">
+
+    <!-- (a) Erro de rede / API -->
+    <section class="space-y-6">
+      <p class="text-xs font-mono text-zinc-500">3a — a API não respondeu ao enviar o lote</p>
+      <div>
+        <h1 class="text-2xl font-semibold">Converter para WebP</h1>
+        <p class="mt-1 text-sm text-zinc-500">Os WebP ficam disponíveis aqui e no Histórico.</p>
+      </div>
+
+      <!-- Alert error -->
+      <div role="alert" class="rounded-card border border-red-200 bg-red-50 p-4 flex items-start gap-3">
+        <svg class="mt-0.5 shrink-0 text-red-600" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01"/></svg>
+        <div class="flex-1">
+          <p class="text-sm font-medium text-red-800">Não foi possível enviar o lote</p>
+          <p class="mt-0.5 text-sm text-red-700">A API não respondeu (localhost:8000). Confirma que o servidor está a correr e tenta de novo — os ficheiros escolhidos mantêm-se.</p>
+        </div>
+        <button class="btn btn-secondary h-9">Tentar de novo</button>
+      </div>
+
+      <div class="card overflow-hidden">
+        <div class="px-4 h-12 flex items-center justify-between border-b border-zinc-200 text-sm">
+          <span class="font-medium">12 ficheiros · <span class="num">18,4 MB</span></span>
+          <button class="btn btn-ghost h-8 text-xs">Limpar lista</button>
+        </div>
+        <table class="w-full">
+          <thead class="bg-zinc-50"><tr><th>Ficheiro</th><th class="text-right">Tamanho</th><th><span class="sr-only">Acções</span></th></tr></thead>
+          <tbody>
+            <tr><td><div class="font-medium">hero-homepage.jpg</div><div class="text-xs text-zinc-500">JPG</div></td><td class="num">2,1 MB</td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Remover hero-homepage.jpg da lista">✕</button></td></tr>
+            <tr><td><div class="font-medium">equipa-2026.png</div><div class="text-xs text-zinc-500">PNG</div></td><td class="num">4,8 MB</td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Remover equipa-2026.png da lista">✕</button></td></tr>
+            <tr><td><div class="font-medium">produto-cadeira-01.jpg</div><div class="text-xs text-zinc-500">JPG</div></td><td class="num">860 KB</td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Remover produto-cadeira-01.jpg da lista">✕</button></td></tr>
+          </tbody>
+        </table>
+        <div class="px-4 py-3 text-xs text-zinc-500 border-t border-zinc-200">… e mais 9 ficheiros</div>
+      </div>
+
+      <div class="card p-6 flex flex-col sm:flex-row sm:items-end gap-6 justify-between">
+        <div class="flex-1 max-w-sm">
+          <label for="q3" class="block text-sm font-medium">Qualidade WebP</label>
+          <div class="mt-2 flex items-center gap-4">
+            <input id="q3" type="range" min="1" max="100" value="80" class="flex-1 accent-brand-600">
+            <input type="number" min="1" max="100" value="80" aria-label="Qualidade, 1 a 100" class="w-20 h-10 px-3 rounded-card border border-zinc-200 bg-white num">
+          </div>
+        </div>
+        <button class="btn btn-primary">Converter</button>
+      </div>
+    </section>
+
+    <hr class="border-zinc-200">
+
+    <!-- (b) Lote concluído com falhas parciais -->
+    <section class="space-y-6">
+      <p class="text-xs font-mono text-zinc-500">3b — lote concluído: 9 ok · 3 erro (o lote não pára)</p>
+
+      <!-- Resumo do lote -->
+      <div class="card p-6 flex flex-col md:flex-row md:items-center gap-6 justify-between">
+        <div>
+          <div class="flex items-center gap-3">
+            <h2 class="text-lg font-semibold">Lote concluído</h2>
+            <span class="badge badge-ok">9 ok</span>
+            <span class="badge badge-erro">3 erro</span>
+          </div>
+          <p class="mt-1 text-sm text-zinc-500">
+            <span class="num">18,4 MB</span> → <span class="num">6,1 MB</span> ·
+            <span class="num text-emerald-700 font-medium">−67 %</span> · qualidade <span class="num">80</span> ·
+            <a href="#" class="text-brand-700 underline underline-offset-2">ver no Histórico</a>
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="btn btn-ghost">Novo lote</button>
+          <button class="btn btn-secondary">Descarregar ZIP <span class="text-zinc-500 num">(9)</span></button>
+        </div>
+      </div>
+
+      <div class="card overflow-hidden">
+        <table class="w-full">
+          <thead class="bg-zinc-50">
+            <tr><th>Ficheiro</th><th class="text-right">Antes</th><th class="text-right">Depois</th><th class="text-right">Poupança</th><th>Estado</th><th><span class="sr-only">Acções</span></th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="font-medium">hero-homepage.jpg</div><div class="text-xs text-zinc-500">JPG</div></td>
+              <td class="num">2,1 MB</td><td class="num">640 KB</td><td class="num text-emerald-700">−70 %</td>
+              <td><span class="badge badge-ok">ok</span></td>
+              <td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar hero-homepage.webp">↓</button></td>
+            </tr>
+            <tr>
+              <td><div class="font-medium">icone-menu.svg</div><div class="mt-0.5 text-xs text-red-700">SVG não é suportado — só JPG e PNG.</div></td>
+              <td class="num">12 KB</td><td class="num text-zinc-400">—</td><td class="num text-zinc-400">—</td>
+              <td><span class="badge badge-erro">erro</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><div class="font-medium">equipa-2026.png</div><div class="text-xs text-zinc-500">PNG</div></td>
+              <td class="num">4,8 MB</td><td class="num">1,2 MB</td><td class="num text-emerald-700">−75 %</td>
+              <td><span class="badge badge-ok">ok</span></td>
+              <td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar equipa-2026.webp">↓</button></td>
+            </tr>
+            <tr>
+              <td><div class="font-medium">foto-fabrica-drone.jpg</div><div class="mt-0.5 text-xs text-red-700">Ficheiro demasiado grande (28 MB; máximo 20 MB).</div></td>
+              <td class="num">28,0 MB</td><td class="num text-zinc-400">—</td><td class="num text-zinc-400">—</td>
+              <td><span class="badge badge-erro">erro</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><div class="font-medium">logo-parceiro-lasa.png</div><div class="text-xs text-zinc-500">PNG · o original já estava optimizado</div></td>
+              <td class="num">156 KB</td><td class="num">174 KB</td><td class="num text-amber-700">+12 %</td>
+              <td><span class="badge badge-ok">ok</span></td>
+              <td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar logo-parceiro-lasa.webp">↓</button></td>
+            </tr>
+            <tr>
+              <td><div class="font-medium">capa-catalogo.jpg</div><div class="mt-0.5 text-xs text-red-700">Ficheiro corrompido — não foi possível ler a imagem.</div></td>
+              <td class="num">1,9 MB</td><td class="num text-zinc-400">—</td><td class="num text-zinc-400">—</td>
+              <td><span class="badge badge-erro">erro</span></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="px-4 py-3 text-xs text-zinc-500 border-t border-zinc-200">… e mais 6 ficheiros ok</div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ====================================================================
+     ESTADO 4 — CHEIO (24 ficheiros convertidos; onde o layout parte)
+     ==================================================================== -->
+<div class="estado-label">ESTADO 4 / 4 — CHEIO · 24 ficheiros, nomes longos, resumo fixo</div>
+<div class="min-h-screen">
+  <header class="bg-white border-b border-zinc-200">
+    <div class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-3"><span class="h-6 w-6 rounded-md bg-brand-600"></span><span class="font-semibold">teste</span></div>
+      <nav class="flex items-center gap-1 text-sm" aria-label="Principal">
+        <a href="#" aria-current="page" class="px-3 h-9 inline-flex items-center rounded-card bg-brand-50 text-brand-700 font-medium">Converter</a>
+        <a href="#" class="px-3 h-9 inline-flex items-center rounded-card text-zinc-600 hover:bg-zinc-100">Histórico</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 py-10 space-y-8">
+    <div>
+      <h1 class="text-2xl font-semibold">Converter para WebP</h1>
+      <p class="mt-1 text-sm text-zinc-500">Os WebP ficam disponíveis aqui e no Histórico.</p>
+    </div>
+
+    <!-- Resumo fixo no topo ao fazer scroll na tabela -->
+    <div class="card p-6 flex flex-col md:flex-row md:items-center gap-6 justify-between sticky top-10 z-[5]">
+      <div>
+        <div class="flex items-center gap-3">
+          <h2 class="text-lg font-semibold">Lote concluído</h2>
+          <span class="badge badge-ok">24 ok</span>
+        </div>
+        <p class="mt-1 text-sm text-zinc-500">
+          <span class="num">41,7 MB</span> → <span class="num">12,9 MB</span> ·
+          <span class="num text-emerald-700 font-medium">−69 %</span> · qualidade <span class="num">80</span> ·
+          <a href="#" class="text-brand-700 underline underline-offset-2">ver no Histórico</a>
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button class="btn btn-ghost">Novo lote</button>
+        <button class="btn btn-secondary">Descarregar ZIP <span class="text-zinc-500 num">(24)</span></button>
+      </div>
+    </div>
+
+    <div class="card overflow-hidden">
+      <div class="max-h-[28rem] overflow-y-auto">
+        <table class="w-full table-fixed">
+          <colgroup><col><col class="w-28"><col class="w-28"><col class="w-28"><col class="w-24"><col class="w-14"></colgroup>
+          <thead class="bg-zinc-50 sticky top-0">
+            <tr><th>Ficheiro</th><th class="text-right">Antes</th><th class="text-right">Depois</th><th class="text-right">Poupança</th><th>Estado</th><th><span class="sr-only">Acções</span></th></tr>
+          </thead>
+          <tbody>
+            <tr><td><div class="font-medium truncate" title="fotografia-da-equipa-no-evento-de-lancamento-2026-final-v3.jpg">fotografia-da-equipa-no-evento-de-lancamento-2026-final-v3.jpg</div><div class="text-xs text-zinc-500">JPG</div></td><td class="num">5,6 MB</td><td class="num">1,5 MB</td><td class="num text-emerald-700">−73 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar fotografia-da-equipa-no-evento-de-lancamento-2026-final-v3.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">hero-homepage.jpg</div><div class="text-xs text-zinc-500">JPG</div></td><td class="num">2,1 MB</td><td class="num">640 KB</td><td class="num text-emerald-700">−70 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar hero-homepage.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">hero-homepage@2x.jpg</div><div class="text-xs text-zinc-500">JPG</div></td><td class="num">6,2 MB</td><td class="num">1,9 MB</td><td class="num text-emerald-700">−69 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar hero-homepage@2x.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">equipa-2026.png</div><div class="text-xs text-zinc-500">PNG</div></td><td class="num">4,8 MB</td><td class="num">1,2 MB</td><td class="num text-emerald-700">−75 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar equipa-2026.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">produto-cadeira-01.jpg</div><div class="text-xs text-zinc-500">JPG</div></td><td class="num">860 KB</td><td class="num">298 KB</td><td class="num text-emerald-700">−65 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar produto-cadeira-01.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">produto-cadeira-02.jpg</div><div class="text-xs text-zinc-500">JPG</div></td><td class="num">912 KB</td><td class="num">305 KB</td><td class="num text-emerald-700">−67 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar produto-cadeira-02.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">produto-cadeira-03.jpg</div><div class="text-xs text-zinc-500">JPG</div></td><td class="num">1,1 MB</td><td class="num">366 KB</td><td class="num text-emerald-700">−67 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar produto-cadeira-03.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">produto-mesa-carvalho.jpg</div><div class="text-xs text-zinc-500">JPG</div></td><td class="num">1,4 MB</td><td class="num">420 KB</td><td class="num text-emerald-700">−70 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar produto-mesa-carvalho.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">banner-promocao-verao.png</div><div class="text-xs text-zinc-500">PNG</div></td><td class="num">3,3 MB</td><td class="num">890 KB</td><td class="num text-emerald-700">−73 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar banner-promocao-verao.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">logo-parceiro-lasa.png</div><div class="text-xs text-zinc-500">PNG · o original já estava optimizado</div></td><td class="num">156 KB</td><td class="num">174 KB</td><td class="num text-amber-700">+12 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar logo-parceiro-lasa.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">showroom-porto-entrada.jpg</div><div class="text-xs text-zinc-500">JPG</div></td><td class="num">2,9 MB</td><td class="num">880 KB</td><td class="num text-emerald-700">−70 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar showroom-porto-entrada.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">showroom-porto-interior-01.jpg</div><div class="text-xs text-zinc-500">JPG</div></td><td class="num">3,1 MB</td><td class="num">940 KB</td><td class="num text-emerald-700">−70 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar showroom-porto-interior-01.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">showroom-porto-interior-02.jpg</div><div class="text-xs text-zinc-500">JPG</div></td><td class="num">2,7 MB</td><td class="num">810 KB</td><td class="num text-emerald-700">−70 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar showroom-porto-interior-02.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">icone-entrega-gratis.png</div><div class="text-xs text-zinc-500">PNG</div></td><td class="num">48 KB</td><td class="num">19 KB</td><td class="num text-emerald-700">−60 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar icone-entrega-gratis.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">icone-garantia-5-anos.png</div><div class="text-xs text-zinc-500">PNG</div></td><td class="num">52 KB</td><td class="num">21 KB</td><td class="num text-emerald-700">−60 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar icone-garantia-5-anos.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">blog-como-escolher-sofa-capa.jpg</div><div class="text-xs text-zinc-500">JPG</div></td><td class="num">1,8 MB</td><td class="num">540 KB</td><td class="num text-emerald-700">−70 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar blog-como-escolher-sofa-capa.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">blog-tendencias-2026-capa.jpg</div><div class="text-xs text-zinc-500">JPG</div></td><td class="num">2,0 MB</td><td class="num">610 KB</td><td class="num text-emerald-700">−70 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar blog-tendencias-2026-capa.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">og-image-default.png</div><div class="text-xs text-zinc-500">PNG</div></td><td class="num">780 KB</td><td class="num">210 KB</td><td class="num text-emerald-700">−73 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar og-image-default.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">testemunho-ana-ribeiro.jpg</div><div class="text-xs text-zinc-500">JPG</div></td><td class="num">640 KB</td><td class="num">198 KB</td><td class="num text-emerald-700">−69 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar testemunho-ana-ribeiro.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">testemunho-joao-carvalho.jpg</div><div class="text-xs text-zinc-500">JPG</div></td><td class="num">610 KB</td><td class="num">190 KB</td><td class="num text-emerald-700">−69 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar testemunho-joao-carvalho.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">mapa-lojas-portugal.png</div><div class="text-xs text-zinc-500">PNG</div></td><td class="num">1,2 MB</td><td class="num">350 KB</td><td class="num text-emerald-700">−71 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar mapa-lojas-portugal.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">catalogo-2026-capa.jpg</div><div class="text-xs text-zinc-500">JPG</div></td><td class="num">2,4 MB</td><td class="num">720 KB</td><td class="num text-emerald-700">−70 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar catalogo-2026-capa.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">catalogo-2026-pagina-12.jpg</div><div class="text-xs text-zinc-500">JPG</div></td><td class="num">2,2 MB</td><td class="num">680 KB</td><td class="num text-emerald-700">−69 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar catalogo-2026-pagina-12.webp">↓</button></td></tr>
+            <tr><td><div class="font-medium truncate">favicon-source-512.png</div><div class="text-xs text-zinc-500">PNG</div></td><td class="num">96 KB</td><td class="num">31 KB</td><td class="num text-emerald-700">−68 %</td><td><span class="badge badge-ok">ok</span></td><td class="text-right"><button class="btn btn-ghost btn-icon" aria-label="Descarregar favicon-source-512.webp">↓</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="px-4 py-3 text-xs text-zinc-500 border-t border-zinc-200 flex justify-between"><span>24 ficheiros</span><span>scroll interno — o resumo fica fixo em cima</span></div>
+    </div>
+
+    <div class="card p-6 flex flex-col sm:flex-row sm:items-end gap-6 justify-between">
+      <div class="flex-1 max-w-sm">
+        <label for="q4" class="block text-sm font-medium">Qualidade WebP</label>
+        <div class="mt-2 flex items-center gap-4">
+          <input id="q4" type="range" min="1" max="100" value="80" class="flex-1 accent-brand-600">
+          <input type="number" min="1" max="100" value="80" aria-label="Qualidade, 1 a 100" class="w-20 h-10 px-3 rounded-card border border-zinc-200 bg-white num">
+        </div>
+        <p class="mt-2 text-xs text-zinc-500">Aplica-se ao próximo lote.</p>
+      </div>
+      <button class="btn btn-primary" disabled>Converter</button>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>
